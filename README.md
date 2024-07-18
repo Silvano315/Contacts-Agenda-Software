@@ -32,6 +32,15 @@ User Interface:
 
 **TBD**
 
+Integrations done:
+- Data Structure with JSON
+
+Integrations to do:
+- Define a function to stop the operation (if the client wants to stop/exit the operation)
+
+Ideas:
+- Create a Log file for operations and datetime
+
 ### Final Implementation
 
 **TBD**
