@@ -97,3 +97,32 @@ class Operations:
         # Update the json file opening it in write option
         with open(self.file_path, "w") as agenda_file:
             json.dump(agenda, agenda_file, indent=4)
+
+    def view_contacts(self):
+
+        with open(self.file_path, "r") as file:
+            agenda = json.load(file)
+
+        number_contacts = len(agenda['name'])
+        names = sorted(agenda['name'])
+        for i in range(number_contacts):
+            print(f"Contact {i+1}: {names[i]}")
+        one_contact = input("Would you like to see all information about a specific contact?")
+        while one_contact.lower() == "yes":
+            contact_name = input("Digit contact name you would like to check information:")
+            while contact_name not in agenda['name']:
+                contact_name = input("Name not present. Digit a contat's name available:")
+                if contact_name.lower() == "esc":
+                    # function to terminate operation (is it necessary?)
+                    pass
+            print("="*30)
+            index = agenda['name'].index(contact_name)
+            for field in list(agenda.keys()):
+                if field == 'address':
+                    for position in list(agenda[field].keys()):
+                        if agenda[field][position][index] != "":
+                            print(f"{position}: {agenda[field][position][index]}")
+                    continue
+                if agenda[field][index] != "":
+                    print(f"{field}: {agenda[field][index]}")
+            one_contact = input("Would you like to see another specific contact?")
