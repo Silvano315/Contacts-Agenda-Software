@@ -5,41 +5,65 @@ class Operations:
     def __init__(self) -> None:
         self.file_path = "Contacts/agenda.json"
 
-    # this function has the purpose to check validity of input information and return the correct value
-    def add_and_check_info(self, file, field = None):
+    def is_empy(self, value, field):  
+        while value == "":
+            value = input(f"No input provided. Enter new contact's {field}:")
+        return value
+    
+    def already_exist(self, file, value, field):
+        mod = input(f"This {field} already exists, would you like to update the contact? (Yes, No)")
+        if mod.lower() == "yes":
+            # function to modify the contact having the field
+            pass
 
-        """
-        file: loaded json file as a dict
-        field: key of the json file
-
-        This function is used in add_contact() method to append a value to json file for each field. It checks
-        some conditions for 'phone', 'name', 'email' field.
-        """
-
-        value = input(f"Enter new contact's {field}:")
-
-        # Check validity for phone number
+    """def is_phone_valid(self, value, field):
         if field == 'phone':
             while not all(val in '0123456789+-*#' for val in value):
                 value = input(f"Enter a new correct contact's {field} with '0123456789+-*#':")
+            return value"""
 
-        # Check validity for name and phone number, checking also if client wants to modify an existing contact
-        if field in ['name', 'phone'] and (value in file[field] or value == ""):
-            if value == "":    
-                while value == "":
-                    value = input(f"No input provided. Enter new contact's {field}:")
-                return value
 
-            mod = input("Name already exists, would you like to update the contact? (Yes, No)")
-            if mod.lower() == "yes":
-                # function to modify the contact having the field
-                pass
-            else:
-                while value in file[field] and value == "":
+    # this function has the purpose to check validity of input information and return the correct value
+    def add_and_check_info(self, file, field):
+
+        value = input(f"Enter new contact's {field}:")
+
+        """ 
+       # Check validity for phone number
+        if field == 'phone':
+            while not all(val in '0123456789+-*#' for val in value):
+                value = input(f"Enter a new correct contact's {field} with '0123456789+-*#':")
+            return value
+            """
+
+        # Check validity for name, checking also if client wants to modify an existing contact
+        if field == 'name':
+            if value in file[field]:
+                self.already_exist(file, value, field)
+            while value in file[field] or value == "":
+                if value == "":
+                    value = self.is_empy(value, field) 
+                else:
                     value = input(f"Enter new contact's {field} or Esc for stopping operation:")
                     if value.lower() == 'esc':
                         # function to terminate operation (is it necessary?)
                         pass
+
+        # Check validity for phone number, checking also if client wants to modify an existing contact
+        if field == 'phone':
+            if value in file[field]:
+                self.already_exist(file, value, field)
+            while value in file[field] or value == "" or not all(val in '0123456789+-*#' for val in value):
+                if value == "":
+                    value = self.is_empy(value, field) 
+                elif value in file[field]:
+                    value = input(f"Enter new contact's {field} or Esc for stopping operation:")
+                    if value.lower() == 'esc':
+                        # function to terminate operation (is it necessary?)
+                        pass
+                else:
+                    value = input(f"Enter a new correct contact's {field} with '0123456789+-*#':")                
+            return value
 
         # Check validity for email
         if field == 'email':
