@@ -24,13 +24,18 @@ class Operations:
                 value = input(f"Enter a new correct contact's {field} with '0123456789+-*#':")
 
         # Check validity for name and phone number, checking also if client wants to modify an existing contact
-        if field in ['name', 'phone'] and value in file[field]:
+        if field in ['name', 'phone'] and (value in file[field] or value == ""):
+            if value == "":    
+                while value == "":
+                    value = input(f"No input provided. Enter new contact's {field}:")
+                return value
+
             mod = input("Name already exists, would you like to update the contact? (Yes, No)")
             if mod.lower() == "yes":
                 # function to modify the contact having the field
                 pass
             else:
-                while value in file[field]:
+                while value in file[field] and value == "":
                     value = input(f"Enter new contact's {field} or Esc for stopping operation:")
                     if value.lower() == 'esc':
                         # function to terminate operation (is it necessary?)
