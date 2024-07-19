@@ -34,6 +34,7 @@ User Interface:
 
 Integrations done:
 - Data Structure with JSON
+- Feature to add contact
 
 Integrations to do:
 - Define a function to stop the operation (if the client wants to stop/exit the operation)
