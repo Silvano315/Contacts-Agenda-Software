@@ -20,7 +20,7 @@ Functionality:
 - Adding a Contact: Allow the insertion of new contacts.
 - Contacts View: Show all your contacts.
 - Editing a Contact: Allow editing details of existing contacts.
-- Deleting a Contact: Remove contacts from your address book.
+- Deleting a Contact: Remove contacts from your phone agenda.
 - Search for a Contact: Search for contacts by first name or last name.
 - Saving and Loading: Save contacts to a file and load them at startup.
 
@@ -35,9 +35,12 @@ User Interface:
 Integrations done:
 - Data Structure with JSON
 - Feature to add contact
+- Feature to view the contacts
+- Feature to modify the contacts
 
 Integrations to do:
-- Define a function to stop the operation (if the client wants to stop/exit the operation)
+- Add limit of words for notes
+- Create a function to force user to type only [yes, no, exit, esc] in a while loop otherwise continue to ask for input()
 
 Ideas:
 - Create a Log file for operations and datetime
