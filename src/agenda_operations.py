@@ -336,3 +336,33 @@ class Operations:
 
         with open(self.file_path, "w") as agenda_file:
             json.dump(agenda, agenda_file, indent=4)
+
+
+    def deleting_contact(self):
+
+        """
+        It prompts the user to enter the name of the contact they want to delete and 
+        updates the JSON file accordingly.
+        """
+
+        with open(self.file_path, "r") as agenda_file:
+            agenda = json.load(agenda_file)
+
+        contact_name = input("Digit contact name you would like to delete:")
+        while contact_name not in agenda['name']:
+            contact_name = input("Name not present. Digit a contat's name available:")
+            if self.check_exit(contact_name):
+                print("Terminate deleting operation")
+                return
+            
+        index = agenda["name"].index(contact_name)
+        for field in list(agenda.keys()):
+            if field == 'address':
+                for position in list(agenda[field].keys()):
+                    agenda[field][position].pop(index)
+                continue
+            agenda[field].pop(index)
+        
+        print(f"Contact '{contact_name}' has been deleted.")
+        with open(self.file_path, "w") as agenda_file:
+            json.dump(agenda, agenda_file, indent=4)
