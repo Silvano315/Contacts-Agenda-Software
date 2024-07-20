@@ -37,6 +37,7 @@ Integrations done:
 - Feature to add contact
 - Feature to view the contacts
 - Feature to modify the contacts
+- Feature to delete a contact
 
 Integrations to do:
 - Add limit of words for notes
