@@ -364,7 +364,7 @@ class Operations:
         print("Contacts saved successfully.")
 
 
-    def menu():
+    def menu(self):
         print("\nManage your phone agenda:")
         print("1. Add Contact")
         print("2. View Contact")
