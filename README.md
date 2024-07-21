@@ -38,6 +38,9 @@ Integrations done:
 - Feature to view the contacts
 - Feature to modify the contacts
 - Feature to delete a contact
+- Feature to search a contact by the first name or the last name
+- Feature to save and load contacts 
+- Interface with main.py
 
 Integrations to do:
 - Add limit of words for notes
