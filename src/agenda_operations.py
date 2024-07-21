@@ -3,60 +3,67 @@ from tld import is_tld
 
 class Operations:
     def __init__(self) -> None:
-
         self.file_path = "Contacts/agenda.json"
+        self.agenda = self.load_contacts()
 
 
     def is_empty(self, value, field):
-
         while value == "":
             value = input(f"No input provided. Enter new contact's {field}:")
         return value
     
 
     def check_exit(self, command):
-
         if command.lower() in ["no", "esc", "exit"]:
             print("Exiting the operation. Thank you!")
             return True
         return False
 
     
-    def already_exist(self, agenda, first_name, last_name):
-        if first_name in agenda["name"]["first name"]:
-            indices = [i for i, name in enumerate(agenda["name"]["first name"]) if name == first_name]
-            for index in indices:
-                if agenda["name"]["last name"][index] == last_name:
-                    mod = input(f"This contact (first name: {first_name}, last name: {last_name}) already exists. Would you like to update the contact? (Yes, No)")
-                    if mod.lower() == "yes":
-                        agenda = self.modify_contact(index, agenda)
-                        with open(self.file_path, "w") as agenda_file:
-                            json.dump(agenda, agenda_file, indent=4)
-                        return True
+    def already_exist(self, value, field, last_name = None):
+        if field == 'name':
+            if value in self.agenda[field]["first name"]:
+                indices = [i for i, name in enumerate(self.agenda[field]["first name"]) if name == value]
+                for index in indices:
+                    if self.agenda[field]["last name"][index] == last_name:
+                        mod = input(f"This contact (first name: {value}, last name: {last_name}) already exists. Would you like to update the contact? (Yes, No)")
+                        if mod.lower() == "yes":
+                            self.agenda = self.modify_contact(index)
+                            self.save_contacts()
+                            return True
+        elif field == 'phone':
+            if value in self.agenda[field]:
+                mod = input(f"This phone number ({value}) already exists. Would you like to update the contact? (Yes, No)")
+                if mod.lower() == "yes":
+                    index = self.agenda[field].index(value)
+                    self.agenda = self.modify_contact(index)
+                    self.save_contacts()
+                    return True
         return False
 
 
-    def view_contact(self, first_name, last_name, agenda):
+    def view_contact(self, first_name, last_name):
         try:
-            index = next(i for i, (fn, ln) in enumerate(zip(agenda['name']['first name'], agenda['name']['last name'])) if fn == first_name and ln == last_name)
+            index = next(i for i, (fn, ln) in enumerate(zip(self.agenda['name']['first name'], self.agenda['name']['last name'])) if fn == first_name and ln == last_name)
         except StopIteration:
             print("Contact not found.")
             return
         
-        for field in agenda.keys():
+        for field in self.agenda.keys():
             if field == 'address':
-                for position in agenda[field].keys():
-                    if agenda[field][position][index] != "":
-                        print(f"{position.capitalize()}: {agenda[field][position][index]}")
+                for position in self.agenda[field].keys():
+                    if self.agenda[field][position][index] != "":
+                        print(f"{position.capitalize()}: {self.agenda[field][position][index]}")
             elif field == 'name':
-                print(f"First name: {agenda['name']['first name'][index]}")
-                print(f"Last name: {agenda['name']['last name'][index]}")
-            elif agenda[field][index] != "":
-                print(f"{field.capitalize()}: {agenda[field][index]}")
+                print(f"First name: {self.agenda['name']['first name'][index]}")
+                print(f"Last name: {self.agenda['name']['last name'][index]}")
+            elif self.agenda[field][index] != "":
+                print(f"{field.capitalize()}: {self.agenda[field][index]}")
 
 
-    def modify_contact(self, index, agenda):
-        for field in agenda.keys():
+    def modify_contact(self, index):
+        temp_agenda = self.load_contacts()
+        for field in temp_agenda.keys():
             edit_field = input(f"Would you like to edit {field}? (Yes, No):")
             if edit_field.lower() == 'yes':
                 if field == 'name':
@@ -64,36 +71,38 @@ class Operations:
                     if new_first_name == "":
                         new_first_name = self.is_empty(new_first_name, "first name") 
                     new_last_name = input(f"Enter new last name:")
-                    new_first_name, new_last_name = self.is_name_valid(agenda, new_first_name, new_last_name)
+                    new_first_name, new_last_name = self.is_name_valid(new_first_name, new_last_name, temp_agenda)
                     if new_first_name and new_last_name:
-                        agenda['name']['first name'][index] = new_first_name
-                        agenda['name']['last name'][index] = new_last_name
+                        temp_agenda['name']['first name'][index] = new_first_name
+                        temp_agenda['name']['last name'][index] = new_last_name
                     else:
                         print(f"{field.capitalize()} editing interrupted!")
                 elif field == 'phone':
                     new_value = input(f"Enter new phone number:")
-                    new_value = self.is_phone_valid(agenda, new_value)
+                    new_value = self.is_phone_valid(new_value, temp_agenda)
                     if new_value:
-                        agenda[field][index] = new_value
+                        temp_agenda[field][index] = new_value
                     else:
                         print(f"{field.capitalize()} editing interrupted!")
                 elif field == 'email':
                     new_value = input(f"Enter new email address:")
                     new_value = self.is_email_valid(new_value)
                     if new_value:
-                        agenda[field][index] = new_value
+                        temp_agenda[field][index] = new_value
                     else:
                         print(f"{field.capitalize()} editing interrupted!")
                 elif field == 'address':
-                    for position in agenda[field].keys():
-                        agenda[field][position][index] = input(f"Enter new {position}:")
+                    for position in temp_agenda[field].keys():
+                        temp_agenda[field][position][index] = input(f"Enter new {position}:")
                 else:
-                    agenda[field][index] = input(f"Enter new {field}:")
-        return agenda
+                    temp_agenda[field][index] = input(f"Enter new {field}:")
+        self.agenda = temp_agenda
+        self.save_contacts()
+        return self.agenda
     
     
-    def is_name_valid(self, file, first_name, last_name):
-        while any(fn == first_name and ln == last_name for fn, ln in zip(file["name"]["first name"], file["name"]["last name"])):
+    def is_name_valid(self, first_name, last_name, temp_agenda):
+        while any(fn == first_name and ln == last_name for fn, ln in zip(temp_agenda["name"]["first name"], temp_agenda["name"]["last name"])):
             #print("Contact with this first name and last name already exists.")
             first_name = input("Enter new contact's first name or Esc for stopping operation:")
             if first_name == "":
@@ -108,12 +117,11 @@ class Operations:
         return first_name, last_name
 
 
-    def is_phone_valid(self, file, val):
-
-        while val in file["phone"] or val == "" or not all(v in '0123456789+-*#' for v in val):
+    def is_phone_valid(self, val, temp_agenda):
+        while val in temp_agenda["phone"] or val == "" or not all(v in '0123456789+-*#' for v in val):
             if val == "":
                 val = self.is_empty(val, "phone") 
-            elif val in file["phone"]:
+            elif val in temp_agenda["phone"]:
                 val = input("Enter new contact's phone or Esc for stopping operation:")
                 if self.check_exit(val):
                     return None
@@ -125,7 +133,6 @@ class Operations:
 
 
     def is_email_valid(self, val):
-
         while (len(val.split("@")) != 2 or not is_tld(val.split(".")[-1])) and val != "":
             val = input(f"Enter new contact's email with only one @ and appropriate TLD domain:")
             if self.check_exit(val):
@@ -133,89 +140,54 @@ class Operations:
         return val
 
 
-    def add_and_check_info(self, file, field):
+    def add_and_check_info(self, field, temp_agenda):
         value = input(f"Enter new contact's {field}:")
         if field == 'first name':
             first_name = value
             if first_name == "":
                 first_name = self.is_empty(first_name, "first name") 
             last_name = input("Enter new contact's last name:")
-            if self.already_exist(file, first_name, last_name):
+            if self.already_exist(first_name, "name", last_name):
                 return None, None
-            return self.is_name_valid(file, first_name, last_name)
+            return self.is_name_valid(first_name, last_name, temp_agenda)
 
         if field == 'phone':
-            if value in file["phone"]:
-                if self.already_exist(file, value, field):
+            if value in temp_agenda["phone"]:
+                if self.already_exist(value, field):
                     return None
-            return self.is_phone_valid(file, value)
+            return self.is_phone_valid(value, temp_agenda)
 
         if field == 'email':
             return self.is_email_valid(value)
 
         return value
 
+
     def add_contact(self):
-        
-        # Take the json file in read option
-        with open(self.file_path, "r") as agenda_file:
-            agenda = json.load(agenda_file)
-
-        """new_contact = {
-            "first name": "",
-            "last name": "",
-            "phone": "",
-            "email": "",
-            "group": "",
-            "address": {
-                "street": "",
-                "city": "",
-                "state": ""
-            },
-            "note": ""
-        }"""
-
-        for field in agenda.keys():
+        temp_agenda = self.load_contacts()
+        for field in temp_agenda.keys():
             if field == 'name':
-                first_name, last_name = self.add_and_check_info(agenda, "first name")
+                first_name, last_name = self.add_and_check_info("first name", temp_agenda)
                 if first_name is None or last_name is None:
                     return
-                #new_contact["first name"] = first_name
-                #new_contact["last name"] = last_name
-                agenda["name"]["first name"].append(first_name)
-                agenda["name"]["last name"].append(last_name)
+                temp_agenda["name"]["first name"].append(first_name)
+                temp_agenda["name"]["last name"].append(last_name)
             elif field == 'address':
-                for position in agenda[field].keys():
-                    #new_contact["address"][position] = self.add_and_check_info(agenda, position)
-                    agenda["address"][position].append(self.add_and_check_info(agenda, position))
+                for position in temp_agenda[field].keys():
+                    temp_agenda["address"][position].append(self.add_and_check_info(position, temp_agenda))
             else:
-                value = self.add_and_check_info(agenda, field)
+                value = self.add_and_check_info(field, temp_agenda)
                 if field in ["phone", "email"] and value is None:
                     return
-                agenda[field].append(value)
-
-
-        """agenda["name"]["first name"].append(new_contact["first name"])
-        agenda["name"]["last name"].append(new_contact["last name"])
-        agenda["phone"].append(new_contact["phone"])
-        agenda["email"].append(new_contact["email"])
-        agenda["group"].append(new_contact["group"])
-        for key in new_contact["address"].keys():
-            agenda["address"][key].append(new_contact["address"][key])
-        agenda["note"].append(new_contact["note"])"""
-
-        # Update the json file opening it in write option
-        with open(self.file_path, "w") as agenda_file:
-            json.dump(agenda, agenda_file, indent=4)
+                temp_agenda[field].append(value)
+        
+        self.agenda = temp_agenda
+        self.save_contacts()
+        print("Contact added successfully.")
 
 
     def view_contacts(self):
-
-        with open(self.file_path, "r") as file:
-            agenda = json.load(file)
-
-        #number_contacts = len(agenda['name']['first name'])
-        names = sorted(zip(agenda['name']['first name'], agenda['name']['last name']), key=lambda x: (x[0].lower(), x[1].lower()))
+        names = sorted(zip(self.agenda['name']['first name'], self.agenda['name']['last name']), key=lambda x: (x[0].lower(), x[1].lower()))
         
         for i, (first_name, last_name) in enumerate(names):
             print(f"Contact {i + 1}: {first_name} {last_name}")
@@ -231,10 +203,11 @@ class Operations:
                 print("=" * 30)
                 return
             if (first_name, last_name) not in names:
+                print("="*30)
                 print("Name not present. Please enter a contact's name available:")
             else:
                 print("=" * 30)
-                self.view_contact(first_name, last_name, agenda)
+                self.view_contact(first_name, last_name)
                 one_contact = input("Would you like to see another specific contact? (Yes, No):")
                 print("=" * 30)
                 if self.check_exit(one_contact):
@@ -242,10 +215,7 @@ class Operations:
             
     
     def edit_contacts(self):
-
-        with open(self.file_path, "r") as agenda_file:
-            agenda = json.load(agenda_file)
-
+        self.agenda = self.load_contacts()
         edit_answer = input("Would you like to edit contact's details? (Yes, No):")
         if self.check_exit(edit_answer):
             return
@@ -259,17 +229,17 @@ class Operations:
                 return
 
             try:
-                index = next(i for i, (fn, ln) in enumerate(zip(agenda['name']['first name'], agenda['name']['last name'])) if fn == first_name and ln == last_name)
+                index = next(i for i, (fn, ln) in enumerate(zip(self.agenda['name']['first name'], self.agenda['name']['last name'])) if fn == first_name and ln == last_name)
             except StopIteration:
                 print("Name not present. Please enter a contact's name available.")
                 continue
 
-            agenda = self.modify_contact(index, agenda)
-            with open(self.file_path, "w") as agenda_file:
-                json.dump(agenda, agenda_file, indent=4)
+            self.agenda = self.modify_contact(index)
+            #self.save_contacts()
+
             print("=" * 30)
             print("Modified contact:")
-            self.view_contact(agenda['name']['first name'][index], agenda['name']['last name'][index], agenda)
+            self.view_contact(self.agenda['name']['first name'][index], self.agenda['name']['last name'][index])
             print("=" * 30)
             edit_answer = input("Would you like to edit another contact's details? (Yes, No):")
             if self.check_exit(edit_answer):
@@ -277,10 +247,7 @@ class Operations:
 
 
     def deleting_contact(self):
-
-        with open(self.file_path, "r") as agenda_file:
-            agenda = json.load(agenda_file)
-
+        self.agenda = self.load_contacts()
         first_name = input("Enter the first name of the contact you would like to delete:")
         if self.check_exit(first_name):
             print("Terminate deleting operation")
@@ -291,29 +258,25 @@ class Operations:
             return
 
         try:
-            index = next(i for i, (fn, ln) in enumerate(zip(agenda['name']['first name'], agenda['name']['last name'])) if fn == first_name and ln == last_name)
+            index = next(i for i, (fn, ln) in enumerate(zip(self.agenda['name']['first name'], self.agenda['name']['last name'])) if fn == first_name and ln == last_name)
         except StopIteration:
             print("Name not present. Terminate deleting operation")
             return
 
-        for field in list(agenda.keys()):
+        for field in list(self.agenda.keys()):
             if field == 'address':
-                for position in list(agenda[field].keys()):
-                    agenda[field][position].pop(index)
+                for position in list(self.agenda[field].keys()):
+                    self.agenda[field][position].pop(index)
                 continue
             if field == 'name':
-                for fl_name in list(agenda[field].keys()):
-                    agenda[field][fl_name].pop(index)
+                for fl_name in list(self.agenda[field].keys()):
+                    self.agenda[field][fl_name].pop(index)
 
         print(f"Contact '{first_name} {last_name}' has been deleted.")
-        with open(self.file_path, "w") as agenda_file:
-            json.dump(agenda, agenda_file, indent=4)
+        self.save_contacts()
 
 
     def search_contact(self):
-        with open(self.file_path, "r") as agenda_file:
-            agenda = json.load(agenda_file)
-
         first_name = input("Enter the first name of the contact you are searching for (or press Enter to skip):")
         if self.check_exit(first_name):
             print("Terminate search operation")
@@ -321,7 +284,7 @@ class Operations:
         
         matching_fn = []
         if first_name:
-            matching_fn = [i for i, fn in enumerate(agenda['name']['first name']) if fn == first_name]
+            matching_fn = [i for i, fn in enumerate(self.agenda['name']['first name']) if fn == first_name]
 
         if not first_name or not matching_fn:
             last_name = input("Enter the last name of the contact you are searching for (or press Enter to skip):")
@@ -329,7 +292,7 @@ class Operations:
                 print("Terminate search operation")
                 return
             
-            matching_ls = [i for i, ln in enumerate(agenda['name']['last name']) if ln == last_name]
+            matching_ls = [i for i, ln in enumerate(self.agenda['name']['last name']) if ln == last_name]
             if not matching_ls:
                 print("No contacts found with this specified last name.")
                 return
@@ -337,7 +300,7 @@ class Operations:
             if len(matching_ls) > 1:
                 print("Multiple contacts found with this last name:")
                 for i in matching_ls:
-                    print(f"First name: {agenda['name']['first name'][i]}, Last name: {agenda['name']['last name'][i]}")
+                    print(f"First name: {self.agenda['name']['first name'][i]}, Last name: {self.agenda['name']['last name'][i]}")
                 first_name = input("Enter the first name of the contact to refine your search:")
                 if first_name == "":
                     first_name = self.is_empty(first_name, "first name") 
@@ -345,15 +308,15 @@ class Operations:
                     print("Terminate search operation")
                     return
                 
-                matching_fn = [i for i in matching_ls if agenda['name']['first name'][i] == first_name]
-                if not matching_ls:
+                matching_fn = [i for i in matching_ls if self.agenda['name']['first name'][i] == first_name]
+                if not matching_fn:
                     print("No contacts found with this specified first name.")
                     return
         else:
             if len(matching_fn) > 1:
                 print("Multiple contacts found with this first name:")
                 for i in matching_fn:
-                    print(f"First name: {agenda['name']['first name'][i]}, Last name: {agenda['name']['last name'][i]}")
+                    print(f"First name: {self.agenda['name']['first name'][i]}, Last name: {self.agenda['name']['last name'][i]}")
                 last_name = input("Enter the last name of the contact to refine your search:")
                 if last_name == "":
                     last_name = self.is_empty(last_name, "last name") 
@@ -361,12 +324,53 @@ class Operations:
                     print("Terminate search operation")
                     return
 
-                matching_fn = [i for i in matching_fn if agenda['name']['last name'][i] == last_name]
+                matching_fn = [i for i in matching_fn if self.agenda['name']['last name'][i] == last_name]
                 if not matching_fn:
                     print("No contacts found with the specified last name.")
                     return
 
         index = matching_fn[0]
         print("="*30)
-        self.view_contact(agenda['name']['first name'][index], agenda['name']['last name'][index], agenda)
+        self.view_contact(self.agenda['name']['first name'][index], self.agenda['name']['last name'][index])
         print("="*30)
+
+
+    def load_contacts(self):
+        try:
+            with open(self.file_path, "r") as agenda_file:
+                return json.load(agenda_file)
+        except FileNotFoundError:
+            print("Contacts file not found! Starting with an empty agenda.")
+            return {
+                "name": {
+                    "first name": [], 
+                    "last name": []
+                    },
+                "phone": [],
+                "email": [],
+                "group": [],
+                "address": {
+                    "street": [], 
+                    "city": [], 
+                    "state": []
+                    },
+                "note": []
+            }
+
+
+    def save_contacts(self):
+        with open(self.file_path, "w") as agenda_file:
+            json.dump(self.agenda, agenda_file, indent=4)
+        print("Contacts saved successfully.")
+
+
+    def menu():
+        print("\nManage your phone agenda:")
+        print("1. Add Contact")
+        print("2. View Contact")
+        print("3. Edit Contact")
+        print("4. Delete Contact")
+        print("5. Search Contact")
+        print("6. Save Agenda")
+        print("7. Load Agenda")
+        print("8. Exit")
