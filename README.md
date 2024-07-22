@@ -56,6 +56,7 @@ The JSON data structure for storing contacts is as follows:
 }
 ```
 
+
 ## Methods
 
 ### 1. Add Contact
@@ -113,16 +114,22 @@ The JSON data structure for storing contacts is as follows:
   * Creates a new agenda structure and saves it to a JSON file.
 
 
-Integrations to do:
-- Add limit of words for notes
-- Create a function to force user to type only [yes, no, exit, esc] in a while loop otherwise continue to ask for input()
-
-Ideas:
-- Create a Log file for operations and datetime
-
 ## Final Implementation
 
-**TBD**
+The final implementation includes a main script (`main.py`) and a class (`Operations`) that encapsulates all the functionality needed for managing your phone contacts.
+
+In [menu.py](main.py), you can handles user interaction through a command-line menu, allowing users to perform various operations on the contact agenda. The menu will look like this:
+
+Manage your phone agenda:
+1. Add Contact
+2. View Contact
+3. Edit Contact
+4. Delete Contact
+5. Search Contact
+6. Save Agenda
+7. Load Agenda
+8. Initialize Agenda
+9. Exit
 
 ## Extra: GUI
 
