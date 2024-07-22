@@ -2,13 +2,14 @@
 
 ## Table of Contents
 1. [Introduction](#introduction)
-2. [Methods](#methods)
-3. [Final Implementation](#final-implementation)
-4. [Extra: GUI](#extra-gui)
-5. [Requirements](#requirements)
+2. [Data Structure](#data-structure)
+3. [Methods](#methods)
+4. [Final Implementation](#final-implementation)
+5. [Extra: GUI](#extra-gui)
+6. [Requirements](#requirements)
 
 
-### Introduction
+## Introduction
 
 This repository is the first project of the master's degree in AI Engineering with [Profession AI](https://profession.ai), all the credits for the requests and idea go to this team.
 
@@ -26,21 +27,91 @@ Functionality:
 
 User Interface: 
 - The interface will be command line based, offering a main menu with clear options for the various operations, thus ensuring a fluid and accessible user experience even for less experienced users.
-- As an extra part for this project, I will implement a GUI solution with a Web Application framework
 
-### Methods
+Some useful integrations:
+- As an extra part for this project, I will implement a GUI solution with a Web Application framework (TBD)
+- Implement a log file to save all the operations done by the client, saving datetime and operation's name
+- Constrincts for length in each field of the phone agenda (first name and last name less than 30 words, note less than 150...)
 
-**TBD**
 
-Integrations done:
-- Data Structure with JSON
-- Feature to add contact
-- Feature to view the contacts
-- Feature to modify the contacts
-- Feature to delete a contact
-- Feature to search a contact by the first name or the last name
-- Feature to save and load contacts 
-- Interface with main.py
+## Data Structure
+
+The JSON data structure for storing contacts is as follows:
+
+```json
+{
+    "name": {
+        "first name": [],
+        "last name": []
+    },
+    "phone": [],
+    "email": [],
+    "group": [],
+    "address": {
+        "street": [],
+        "city": [],
+        "state": []
+    },
+    "note": []
+}
+
+
+## Methods
+
+### 1. Add Contact
+
+* **Method:** [`add_contact`](src/agenda_operations.py) 
+* **Process:**
+  * Prompts for first name, last name, phone number, email, group, address (street, city, state), and note.
+  * Checks for duplicates and validates the inputs.
+  * Saves the contact to the in-memory data structure.
+
+### 2. View Contact
+
+* **Method:** [`view_contact`](src/agenda_operations.py) 
+* **Process:**
+  * Prompts for the contact's first name and last name (if needed).
+  * Displays all details of the contact.
+
+### 3. Edit Contact
+
+* **Method:** [`edit_contacts`](src/agenda_operations.py) 
+* **Process:**
+  * Prompts for the contact's first name and last name (if needed).
+  * Allows editing of any field (first name, last name, phone, email, group, address, note).
+
+### 4. Delete Contact
+
+* **Method:** [`delete_contact`](src/agenda_operations.py) 
+* **Process:**
+  * Prompts for the contact's first name and last name (if needed).
+  * Deletes the contact and updates the agenda.
+
+### 5. Search Contact
+
+* **Method:** [`search_contact`](src/agenda_operations.py) 
+* **Process:**
+  * Prompts for the first name or last name.
+  * Displays matching contacts and allows viewing details.
+
+### 6. Save Agenda
+
+* **Method:** [`save_contacts`](src/agenda_operations.py) 
+* **Process:**
+  * Writes the current state of the agenda to a JSON file.
+
+### 7. Load Agenda
+
+* **Method:** [`load_contacts`](src/agenda_operations.py) 
+* **Process:**
+  * Reads the agenda from a JSON file and updates the in-memory data structure.
+
+### 8. Initialize Agenda
+
+* **Method:** [`initialize_agenda`](src/agenda_operations.py) 
+* **Process:**
+  * Creates a new agenda structure and saves it to a JSON file.
+
 
 Integrations to do:
 - Add limit of words for notes
@@ -49,14 +120,22 @@ Integrations to do:
 Ideas:
 - Create a Log file for operations and datetime
 
-### Final Implementation
+## Final Implementation
 
 **TBD**
 
-### Extra: GUI
+## Extra: GUI
 
 **TBD**
 
-### Requirements
+## Requirements
 
-**TBD**
+- Python 3.x
+- JSON (for saving and loading contacts)
+
+Requirements.txt file is [here](requirements.txt). To set up the virtual environment and install any required packages:
+
+```bash
+python -m venv .venv
+source .venv/bin/activate  
+pip install -r requirements.txt
