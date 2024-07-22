@@ -1,0 +1,15 @@
+{
+    "name": {
+        "first name": [],
+        "last name": []
+    },
+    "phone": [],
+    "email": [],
+    "group": [],
+    "address": {
+        "street": [],
+        "city": [],
+        "state": []
+    },
+    "note": []
+}
