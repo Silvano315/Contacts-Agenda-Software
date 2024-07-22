@@ -5,7 +5,7 @@ def main():
 
     while True:
         operations.menu()
-        client_choice = input("Select operation you need (1-8): ").strip()
+        client_choice = input("Select operation you need (1-9): ").strip()
 
         if client_choice == '1':
             operations.add_contact()
@@ -24,10 +24,13 @@ def main():
             operations.load_contacts()
             print("Agenda loaded successfully.")
         elif client_choice == '8':
+            operations.agenda = operations.initialize_agenda()
+            print("Agenda has been initialized.")
+        elif client_choice == '9':
             print("Exiting the program. Thank you!")
             break
         else:
-            print("Invalid option. Please select a number between 1 and 8.")
+            print("Invalid option. Please select a number between 1 and 9.")
 
 if __name__ == "__main__":
     main()
