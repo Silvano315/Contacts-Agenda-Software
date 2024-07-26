@@ -1,8 +1,9 @@
 import json
 import os
 from tld import is_tld
-
+from constants import MAX_LENGTHS
 import logging
+
 
 logging.basicConfig(
     filename = 'Logs/agenda_operations.log',
@@ -110,6 +111,14 @@ class Operations:
     
 
     def is_name_valid(self, first_name, last_name, temp_agenda):
+        if len(first_name) > MAX_LENGTHS['first_name']:
+            print(f"First name cannot exceed {MAX_LENGTHS['first name']} characters.")
+            logging.warning(f"First name excedeed MAX LENGTH: {MAX_LENGTHS['first_name']}")
+            return None, None
+        if len(last_name) > MAX_LENGTHS['last_name']:
+            print(f"Last name cannot exceed {MAX_LENGTHS['last name']} characters.")
+            logging.warning(f"Last name excedeed MAX LENGTH: {MAX_LENGTHS['last_name']}")
+            return None, None
         while any(fn == first_name and ln == last_name for fn, ln in zip(temp_agenda["name"]["first name"], temp_agenda["name"]["last name"])):
             #print("Contact with this first name and last name already exists.")
             logging.warning(f"Duplicate contact name: {first_name} {last_name}.")
@@ -130,6 +139,10 @@ class Operations:
 
 
     def is_phone_valid(self, val, temp_agenda):
+        if len(val) > MAX_LENGTHS['phone']:
+            print(f"Phone number cannot exceed {MAX_LENGTHS['phone']} characters.")
+            logging.warning(f"Phone number excedeed MAX LENGTH: {MAX_LENGTHS['phone']}")
+            return None
         while val in temp_agenda["phone"] or val == "" or not all(v in '0123456789+-*#' for v in val):
             if val == "":
                 val = self.is_empty(val, "phone") 
@@ -150,6 +163,10 @@ class Operations:
 
 
     def is_email_valid(self, val):
+        if len(val) > MAX_LENGTHS['email']:
+            print(f"Email cannot exceed {MAX_LENGTHS['email']} characters.")
+            logging.warning(f"Email address excedeed MAX LENGTH: {MAX_LENGTHS['email']}")
+            return None
         while (len(val.split("@")) != 2 or not is_tld(val.split(".")[-1])) and val != "":
             logging.warning(f"Invalid email format: '{val}'. Prompting for a new email.")
             val = input(f"Enter new contact's email with only one @ and appropriate TLD domain:")
@@ -192,6 +209,14 @@ class Operations:
 
     def add_and_check_info(self, field, temp_agenda):
         value = input(f"Enter new contact's {field}:")
+        while len(value) > MAX_LENGTHS[field]:
+             value = input(f"Enter new contact's {field} with correct length:")
+             logging.warning(f"{field.capitalize()} excedeed MAX LENGTH: {MAX_LENGTHS[field]}")
+             if self.check_exit(value):
+                 if field == "first name" or field == "last name":
+                     return None, None
+                 else:
+                     return None
         if field == 'first name':
             first_name = value
             if first_name == "":
@@ -199,6 +224,9 @@ class Operations:
             if self.check_exit(first_name):
                 return None, None
             last_name = input("Enter new contact's last name:")
+            while len(last_name) > MAX_LENGTHS["last name"]:
+                value = input(f"Enter new contact's {field} with correct length:")
+                logging.warning(f"{field.capitalize()} excedeed MAX LENGTH: {MAX_LENGTHS[field]}")
             if self.check_exit(last_name):
                 return None, None
             if self.check_exit(first_name):
@@ -250,9 +278,15 @@ class Operations:
             if edit_field.lower() == 'yes':
                 if field == 'name':
                     new_first_name = input(f"Enter new first name:")
+                    while len(new_first_name) > MAX_LENGTHS["first name"]:
+                        new_first_name = input("Enter new contact's first name with correct length:")
+                        logging.warning(f"First name excedeed MAX LENGTH: {MAX_LENGTHS['first name']}")
                     if new_first_name == "":
                         new_first_name = self.is_empty(new_first_name, "first name") 
                     new_last_name = input(f"Enter new last name:")
+                    while len(new_last_name) > MAX_LENGTHS["last name"]:
+                        new_last_name = input("Enter new contact's last name with correct length:")
+                        logging.warning(f"Last name excedeed MAX LENGTH: {MAX_LENGTHS['last name']}")
                     new_first_name, new_last_name = self.is_name_valid(new_first_name, new_last_name, temp_agenda)
                     if new_first_name and new_last_name:
                         temp_agenda['name']['first name'][index] = new_first_name
@@ -263,6 +297,9 @@ class Operations:
                         print(f"{field.capitalize()} editing interrupted!")
                 elif field == 'phone':
                     new_value = input(f"Enter new phone number:")
+                    while len(new_value) > MAX_LENGTHS["phone"]:
+                        new_value = input("Enter new contact's phone with correct length:")
+                        logging.warning(f"Phone number excedeed MAX LENGTH: {MAX_LENGTHS['phone']}")
                     new_value = self.is_phone_valid(new_value, temp_agenda)
                     if new_value:
                         temp_agenda[field][index] = new_value
@@ -272,6 +309,9 @@ class Operations:
                         print(f"{field.capitalize()} editing interrupted!")
                 elif field == 'email':
                     new_value = input(f"Enter new email address:")
+                    while len(new_value) > MAX_LENGTHS["email"]:
+                        new_value = input("Enter new contact's email with correct length:")
+                        logging.warning(f"Email address excedeed MAX LENGTH: {MAX_LENGTHS['email']}")
                     new_value = self.is_email_valid(new_value)
                     if new_value:
                         temp_agenda[field][index] = new_value
@@ -281,10 +321,18 @@ class Operations:
                         print(f"{field.capitalize()} editing interrupted!")
                 elif field == 'address':
                     for position in temp_agenda[field].keys():
-                        temp_agenda[field][position][index] = input(f"Enter new {position}:")
+                        new_value = input(f"Enter new {position}:")
+                        while len(new_value) > MAX_LENGTHS[position]:
+                            new_value = input(f"Enter new {position} with correct length:")
+                            logging.warning(f"{position.capitalize()} excedeed MAX LENGTH: {MAX_LENGTHS[position]}")
+                        temp_agenda[field][position][index] = new_value
                         logging.info(f"Updated {field} - {position.capitalize()}: {temp_agenda[field][position][index]}")
                 else:
-                    temp_agenda[field][index] = input(f"Enter new {field}:")
+                    new_value = input(f"Enter new {field}:")
+                    while len(new_value) > MAX_LENGTHS[field]:
+                            new_value = input(f"Enter new {field} with correct length:")
+                            logging.warning(f"{field.capitalize()} excedeed MAX LENGTH: {MAX_LENGTHS[field]}")
+                    temp_agenda[field][index] = new_value
                     logging.info(f"Updated {field} to {temp_agenda[field][index]}")
         self.agenda = temp_agenda
         self.save_contacts()
