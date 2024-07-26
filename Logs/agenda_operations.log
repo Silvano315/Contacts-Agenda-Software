@@ -1,0 +1,75 @@
+2024-07-26 09-58-03 - INFO - Loaded contacts from file: Contacts/agenda.json
+2024-07-26 09-58-06 - INFO - Initialized new agenda.
+2024-07-26 09-59-52 - INFO - Adding a new contact.
+2024-07-26 09-59-52 - INFO - Loaded contacts from file: Contacts/agenda.json
+2024-07-26 09-59-57 - INFO - Validated contact name: Silvano Quarto.
+2024-07-26 10-00-03 - INFO - Validated phone number: '+39123452'.
+2024-07-26 10-00-10 - INFO - Validated email: 'silvano.quarto@gmail.com'.
+2024-07-26 10-00-30 - INFO - Saved contacts to file.
+2024-07-26 10-00-30 - INFO - Contact added successfully.
+2024-07-26 10-01-02 - INFO - Adding a new contact.
+2024-07-26 10-01-02 - INFO - Loaded contacts from file: Contacts/agenda.json
+2024-07-26 10-01-06 - INFO - Validated contact name: Paola Quarto.
+2024-07-26 10-01-07 - INFO - Validated phone number: '32423523'.
+2024-07-26 10-01-12 - INFO - Validated email: 'sfdas@asdd.it'.
+2024-07-26 10-01-24 - INFO - Saved contacts to file.
+2024-07-26 10-01-24 - INFO - Contact added successfully.
+2024-07-26 10-02-53 - INFO - Viewing all contacts.
+2024-07-26 10-03-01 - INFO - Viewing contact: Silvano Quarto
+2024-07-26 10-03-01 - INFO - Contact found: Silvano Quarto at index 0
+2024-07-26 10-03-03 - INFO - View operation terminated by user.
+2024-07-26 10-03-18 - INFO - Starting edit operation.
+2024-07-26 10-03-18 - INFO - Loaded contacts from file: Contacts/agenda.json
+2024-07-26 10-03-33 - INFO - Editing contact: Paola Quarto
+2024-07-26 10-03-33 - INFO - Loaded contacts from file: Contacts/agenda.json
+2024-07-26 10-03-33 - INFO - Loaded contacts for modification. Editing contact at index 1.
+2024-07-26 10-03-50 - INFO - Updated address - Street: Main street 543
+2024-07-26 10-03-52 - INFO - Updated address - City: no
+2024-07-26 10-03-53 - INFO - Updated address - State: no
+2024-07-26 10-03-58 - INFO - Saved contacts to file.
+2024-07-26 10-03-58 - INFO - Contacts saved after modification at index 1.
+2024-07-26 10-03-58 - INFO - Contact found: Paola Quarto at index 1
+2024-07-26 10-04-08 - INFO - Edit operation completed.
+2024-07-26 10-04-12 - INFO - Editing contact: Paola Quarto
+2024-07-26 10-04-12 - INFO - Loaded contacts from file: Contacts/agenda.json
+2024-07-26 10-04-12 - INFO - Loaded contacts for modification. Editing contact at index 1.
+2024-07-26 10-04-29 - INFO - Updated address - Street: Main street 242
+2024-07-26 10-04-34 - INFO - Updated address - City: San Fransisco
+2024-07-26 10-04-35 - INFO - Updated address - State: USA
+2024-07-26 10-04-37 - INFO - Saved contacts to file.
+2024-07-26 10-04-37 - INFO - Contacts saved after modification at index 1.
+2024-07-26 10-04-37 - INFO - Contact found: Paola Quarto at index 1
+2024-07-26 10-04-39 - INFO - Edit operation terminated by user.
+2024-07-26 10-04-50 - INFO - Adding a new contact.
+2024-07-26 10-04-50 - INFO - Loaded contacts from file: Contacts/agenda.json
+2024-07-26 10-04-54 - INFO - Contact already exists with first name: 'Silvano' and last name: 'Quarto'.
+2024-07-26 10-04-55 - INFO - Contact update declined: first name: 'Silvano', last name: 'Quarto'.
+2024-07-26 10-04-55 - WARNING - Duplicate contact name: Silvano Quarto.
+2024-07-26 10-05-01 - INFO - Validated contact name: Silvano Lupo.
+2024-07-26 10-05-03 - WARNING - Invalid phone number format: 'df34f3f'. Prompting for a new number.
+2024-07-26 10-05-05 - INFO - Validated phone number: '234235'.
+2024-07-26 10-05-06 - INFO - Validated email: ''.
+2024-07-26 10-05-12 - INFO - Saved contacts to file.
+2024-07-26 10-05-12 - INFO - Contact added successfully.
+2024-07-26 10-05-28 - INFO - Saved contacts to file.
+2024-07-26 10-05-31 - INFO - Loaded contacts from file: Contacts/agenda.json
+2024-07-26 10-05-43 - INFO - Adding a new contact.
+2024-07-26 10-05-43 - INFO - Loaded contacts from file: Contacts/agenda.json
+2024-07-26 10-05-47 - INFO - Contact already exists with first name: 'Paola' and last name: 'Quarto'.
+2024-07-26 10-05-51 - INFO - Contact update declined: first name: 'Paola', last name: 'Quarto'.
+2024-07-26 10-05-51 - WARNING - Duplicate contact name: Paola Quarto.
+2024-07-26 10-06-03 - INFO - Validated contact name: Paola Paoletta.
+2024-07-26 10-06-05 - INFO - Validated phone number: '2432513'.
+2024-07-26 10-06-12 - WARNING - Invalid email format: 'asfa@afad@dsf.com'. Prompting for a new email.
+2024-07-26 10-06-16 - INFO - Validated email: 'dsfs@dsf.com'.
+2024-07-26 10-06-25 - INFO - Saved contacts to file.
+2024-07-26 10-06-25 - INFO - Contact added successfully.
+2024-07-26 10-06-32 - INFO - Starting search operation.
+2024-07-26 10-06-40 - INFO - No contacts found with last name: sdsd
+2024-07-26 10-06-48 - INFO - Starting search operation.
+2024-07-26 10-06-52 - INFO - Contact found: Paola Quarto at index 1
+2024-07-26 10-06-52 - INFO - Viewed contact: Paola Quarto
+2024-07-26 10-07-01 - INFO - Starting deleting operation.
+2024-07-26 10-07-01 - INFO - Loaded contacts from file: Contacts/agenda.json
+2024-07-26 10-07-08 - INFO - Deleted contact: Paola Paoletta
+2024-07-26 10-07-08 - INFO - Saved contacts to file.
