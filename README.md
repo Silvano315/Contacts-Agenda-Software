@@ -30,7 +30,7 @@ User Interface:
 
 Some useful integrations:
 - As an extra part for this project, I will implement a GUI solution with a Web Application framework (TBD)
-- Implement a log file to save all the operations done by the client, saving datetime and operation's name
+- Implement a log file to save all the operations done by the client, saving datetime and operation's name (**DONE**)
 - Constrincts for length in each field of the phone agenda (first name and last name less than 30 words, note less than 150...)
 
 
@@ -130,6 +130,12 @@ Manage your phone agenda:
 7. Load Agenda
 8. Initialize Agenda
 9. Exit
+
+In the folder Logs, you can find the [log file](Logs/agenda_operations.log), where each operation is saved. The log file records informational messages, warnings, and errors, providing a detailed history of actions performed within the application. The log entries are formatted with a timestamp, log level, and message, such as:
+
+```bash
+2024-07-26 09-58-03 - INFO - Loaded contacts from file: Contacts/agenda.json
+```
 
 ## Extra: GUI
 
