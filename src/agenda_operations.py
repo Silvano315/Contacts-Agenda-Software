@@ -1,7 +1,7 @@
 import json
 import os
 from tld import is_tld
-from constants import MAX_LENGTHS
+from src.constants import MAX_LENGTHS
 import logging
 
 
@@ -111,13 +111,13 @@ class Operations:
     
 
     def is_name_valid(self, first_name, last_name, temp_agenda):
-        if len(first_name) > MAX_LENGTHS['first_name']:
+        if len(first_name) > MAX_LENGTHS['first name']:
             print(f"First name cannot exceed {MAX_LENGTHS['first name']} characters.")
-            logging.warning(f"First name excedeed MAX LENGTH: {MAX_LENGTHS['first_name']}")
+            logging.warning(f"First name excedeed MAX LENGTH: {MAX_LENGTHS['first name']}")
             return None, None
-        if len(last_name) > MAX_LENGTHS['last_name']:
+        if len(last_name) > MAX_LENGTHS['last name']:
             print(f"Last name cannot exceed {MAX_LENGTHS['last name']} characters.")
-            logging.warning(f"Last name excedeed MAX LENGTH: {MAX_LENGTHS['last_name']}")
+            logging.warning(f"Last name excedeed MAX LENGTH: {MAX_LENGTHS['last name']}")
             return None, None
         while any(fn == first_name and ln == last_name for fn, ln in zip(temp_agenda["name"]["first name"], temp_agenda["name"]["last name"])):
             #print("Contact with this first name and last name already exists.")
@@ -225,7 +225,7 @@ class Operations:
                 return None, None
             last_name = input("Enter new contact's last name:")
             while len(last_name) > MAX_LENGTHS["last name"]:
-                value = input(f"Enter new contact's {field} with correct length:")
+                last_name = input(f"Enter new contact's last name with correct length:")
                 logging.warning(f"{field.capitalize()} excedeed MAX LENGTH: {MAX_LENGTHS[field]}")
             if self.check_exit(last_name):
                 return None, None
@@ -340,8 +340,6 @@ class Operations:
         return self.agenda
     
     
-    
-
     def add_contact(self):
         logging.info("Adding a new contact.")
         temp_agenda = self.load_contacts()
