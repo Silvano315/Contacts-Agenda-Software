@@ -73,3 +73,60 @@
 2024-07-26 10-07-01 - INFO - Loaded contacts from file: Contacts/agenda.json
 2024-07-26 10-07-08 - INFO - Deleted contact: Paola Paoletta
 2024-07-26 10-07-08 - INFO - Saved contacts to file.
+2024-07-29 10-22-09 - INFO - Loaded contacts from file: Contacts/agenda.json
+2024-07-29 10-22-14 - INFO - Adding a new contact.
+2024-07-29 10-22-14 - INFO - Loaded contacts from file: Contacts/agenda.json
+2024-07-29 10-22-25 - WARNING - First name excedeed MAX LENGTH: 30
+2024-07-29 10-22-43 - WARNING - First name excedeed MAX LENGTH: 30
+2024-07-29 10-22-45 - WARNING - First name excedeed MAX LENGTH: 30
+2024-07-29 10-22-51 - WARNING - First name excedeed MAX LENGTH: 30
+2024-07-29 10-22-53 - WARNING - First name excedeed MAX LENGTH: 30
+2024-07-29 10-22-56 - WARNING - First name excedeed MAX LENGTH: 30
+2024-07-29 10-22-58 - WARNING - First name excedeed MAX LENGTH: 30
+2024-07-29 10-23-03 - WARNING - First name excedeed MAX LENGTH: 30
+2024-07-29 10-23-34 - WARNING - First name excedeed MAX LENGTH: 30
+2024-07-29 10-25-09 - WARNING - First name excedeed MAX LENGTH: 30
+2024-07-29 10-25-12 - WARNING - First name excedeed MAX LENGTH: 30
+2024-07-29 10-27-41 - WARNING - First name excedeed MAX LENGTH: 30
+2024-07-29 10-27-42 - WARNING - First name excedeed MAX LENGTH: 30
+2024-07-29 10-27-42 - WARNING - First name excedeed MAX LENGTH: 30
+2024-07-29 10-27-42 - WARNING - First name excedeed MAX LENGTH: 30
+2024-07-29 10-28-55 - INFO - Loaded contacts from file: Contacts/agenda.json
+2024-07-29 10-28-57 - INFO - Adding a new contact.
+2024-07-29 10-28-57 - INFO - Loaded contacts from file: Contacts/agenda.json
+2024-07-29 10-29-04 - WARNING - First name excedeed MAX LENGTH: 30
+2024-07-29 10-29-05 - WARNING - First name excedeed MAX LENGTH: 30
+2024-07-29 10-31-05 - INFO - Loaded contacts from file: Contacts/agenda.json
+2024-07-29 10-31-07 - INFO - Adding a new contact.
+2024-07-29 10-31-07 - INFO - Loaded contacts from file: Contacts/agenda.json
+2024-07-29 10-31-12 - WARNING - First name excedeed MAX LENGTH: 30
+2024-07-29 10-31-15 - WARNING - First name excedeed MAX LENGTH: 30
+2024-07-29 10-31-28 - WARNING - First name excedeed MAX LENGTH: 30
+2024-07-29 10-31-31 - WARNING - First name excedeed MAX LENGTH: 30
+2024-07-29 10-31-31 - WARNING - First name excedeed MAX LENGTH: 30
+2024-07-29 10-31-31 - WARNING - Failed to add contact: invalid name.
+2024-07-29 10-33-29 - INFO - Adding a new contact.
+2024-07-29 10-33-29 - INFO - Loaded contacts from file: Contacts/agenda.json
+2024-07-29 10-33-45 - WARNING - First name excedeed MAX LENGTH: 30
+2024-07-29 10-33-45 - INFO - Validated contact name: Paolo Paolo.
+2024-07-29 10-34-56 - WARNING - Invalid phone number format: 'esc'. Prompting for a new number.
+2024-07-29 10-34-57 - INFO - Operation stopped by the user.
+2024-07-29 10-34-57 - WARNING - Failed to add contact: invalid phone.
+2024-07-29 10-34-59 - INFO - Adding a new contact.
+2024-07-29 10-34-59 - INFO - Loaded contacts from file: Contacts/agenda.json
+2024-07-29 10-35-15 - WARNING - First name excedeed MAX LENGTH: 30
+2024-07-29 10-35-19 - WARNING - First name excedeed MAX LENGTH: 30
+2024-07-29 10-35-19 - WARNING - First name excedeed MAX LENGTH: 30
+2024-07-29 10-35-19 - WARNING - First name excedeed MAX LENGTH: 30
+2024-07-29 10-35-19 - WARNING - Failed to add contact: invalid name.
+2024-07-29 10-36-01 - INFO - Adding a new contact.
+2024-07-29 10-36-01 - INFO - Loaded contacts from file: Contacts/agenda.json
+2024-07-29 10-36-08 - WARNING - First name excedeed MAX LENGTH: 30
+2024-07-29 10-36-08 - INFO - Validated contact name: Paolo .
+2024-07-29 10-36-26 - WARNING - Phone excedeed MAX LENGTH: 15
+2024-07-29 10-36-29 - WARNING - Phone excedeed MAX LENGTH: 15
+2024-07-29 10-36-33 - WARNING - Phone excedeed MAX LENGTH: 15
+2024-07-29 10-36-33 - INFO - Validated phone number: '4345245243'.
+2024-07-29 10-36-34 - INFO - Validated email: ''.
+2024-07-29 10-36-35 - INFO - Saved contacts to file.
+2024-07-29 10-36-35 - INFO - Contact added successfully.
