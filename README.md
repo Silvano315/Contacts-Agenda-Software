@@ -31,7 +31,7 @@ User Interface:
 Some useful integrations:
 - As an extra part for this project, I will implement a GUI solution with a Web Application framework (TBD)
 - Implement a log file to save all the operations done by the client, saving datetime and operation's name (**DONE**)
-- Constrincts for length in each field of the phone agenda (first name and last name less than 30 words, note less than 150...)
+- Constrincts for length in each field of the phone agenda (first name and last name less than 30 words, note less than 150...) (**DONE**)
 
 
 ## Data Structure
