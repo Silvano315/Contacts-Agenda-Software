@@ -1,5 +1,4 @@
 import os
-import re
 import json
 import tkinter as tk
 from tkinter import messagebox
@@ -26,12 +25,12 @@ class AgendaGUI:
     def __init__(self, root):
         self.root = root
         self.root.title("Phone Agenda")
-        self.root.geometry("400x400")
+        self.root.geometry("500x500")  # Increased size for better layout
 
-        # Path del file JSON
+        # Path to file JSON
         self.file_path = "Contacts/agenda_gui.json"
 
-        # Dati iniziali
+        # Data initialization
         self.data = {
             "name": {"first name": [], "last name": []},
             "phone": [],
@@ -88,7 +87,7 @@ class AgendaGUI:
             "note": []
         }
         tk.messagebox.showinfo("Info", "Agenda Initialized")
-        self.reset_to_main_menu()  # Ensure the main menu is shown
+        self.reset_to_main_menu() 
 
     def load_agenda(self):
         if os.path.exists(self.file_path):
@@ -97,39 +96,50 @@ class AgendaGUI:
                 tk.messagebox.showinfo("Info", "Agenda Loaded Successfully")
         else:
             tk.messagebox.showwarning("Warning", "No file found to load")
-        self.reset_to_main_menu()  # Ensure the main menu is shown
+        self.reset_to_main_menu()
 
     def save_agenda(self):
         with open(self.file_path, 'w') as file:
             json.dump(self.data, file, indent=4)
             tk.messagebox.showinfo("Info", "Agenda Saved Successfully")
-        self.reset_to_main_menu()  # Ensure the main menu is shown
+        self.reset_to_main_menu() 
 
     def show_add_contact_form(self):
         self.clear_widgets()
         self.create_add_contact_form()
 
     def create_add_contact_form(self):
-        tk.Label(self.root, text="Add Contact", font=('Arial', 14)).pack(pady=10)
+        # Clear existing widgets
+        self.clear_widgets()
 
+        tk.Label(self.root, text="Add Contact", font=('Arial', 14)).grid(row=0, column=0, columnspan=2, pady=10)
+
+        # Field labels, entries, and error messages
         fields = ['First Name', 'Last Name', 'Phone', 'Email', 'Group', 'Street', 'City', 'State', 'Note']
         self.entries = {}
         self.error_labels = {}
 
-        for field in fields:
-            tk.Label(self.root, text=field).pack(pady=5)
+        for i, field in enumerate(fields):
+            # Label for the field
+            tk.Label(self.root, text=field).grid(row=i * 2 + 1, column=0, pady=5, padx=10, sticky='e')
+            
+            # Entry for the field
             entry = tk.Entry(self.root, width=50)
-            entry.pack(pady=5)
+            entry.grid(row=i * 2 + 1, column=1, pady=5, padx=10)
             self.entries[field] = entry
 
-            # Error label for each field
-            error_label = tk.Label(self.root, text="", fg="red")
-            error_label.pack(pady=5)
+            # Error label for the field
+            error_label = tk.Label(self.root, text="", fg="red", wraplength=400)  # Wrap text to fit within the window
+            error_label.grid(row=i * 2 + 2, column=1, pady=5, padx=10, sticky='w')
             self.error_labels[field] = error_label
 
-        # Add and Cancel Buttons
-        tk.Button(self.root, text="Add", width=20, command=self.validate_and_add_contact).pack(pady=10)
-        tk.Button(self.root, text="Cancel", width=20, command=self.reset_to_main_menu).pack(pady=10)
+        # Add and Back Buttons
+        button_frame = tk.Frame(self.root)
+        button_frame.grid(row=len(fields) * 2 + 2, column=0, columnspan=2, pady=20)
+
+        tk.Button(button_frame, text="Add", width=20, command=self.validate_and_add_contact).pack(side=tk.LEFT, padx=10)
+        tk.Button(button_frame, text="Back", width=20, command=self.reset_to_main_menu).pack(side=tk.LEFT, padx=10)
+
 
     def validate_and_add_contact(self):
         errors = []
@@ -214,20 +224,21 @@ class AgendaGUI:
 
     def view_contacts(self):
         tk.messagebox.showinfo("Info", "View Contacts clicked")
-        # Implementa la logica per visualizzare i contatti
+        # TO DO 
 
     def edit_contact(self):
         tk.messagebox.showinfo("Info", "Edit Contact clicked")
-        # Implementa la logica per modificare un contatto
+        # TO DO 
 
     def delete_contact(self):
         tk.messagebox.showinfo("Info", "Delete Contact clicked")
-        # Implementa la logica per cancellare un contatto
+        # TO DO 
 
     def search_contact(self):
         tk.messagebox.showinfo("Info", "Search Contact clicked")
-        # Implementa la logica per cercare un contatto
+        # TO DO 
 
+        
 if __name__ == "__main__":
     root = tk.Tk()
     app = AgendaGUI(root)
