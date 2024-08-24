@@ -1,0 +1,51 @@
+{
+    "name": {
+        "first name": [
+            "Silvano",
+            "Paola",
+            "Alberto"
+        ],
+        "last name": [
+            "Quarto",
+            "Quarto",
+            "Quarto"
+        ]
+    },
+    "phone": [
+        "23242424",
+        "324324",
+        "23231234325"
+    ],
+    "email": [
+        "",
+        "ewrewr@erwrewr.com",
+        "sadsad@dasd.com"
+    ],
+    "group": [
+        "",
+        "",
+        "family"
+    ],
+    "address": {
+        "street": [
+            "",
+            "",
+            ""
+        ],
+        "city": [
+            "",
+            "",
+            ""
+        ],
+        "state": [
+            "",
+            "",
+            ""
+        ]
+    },
+    "note": [
+        "",
+        "",
+        ""
+    ]
+}
