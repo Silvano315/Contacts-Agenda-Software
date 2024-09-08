@@ -104,9 +104,42 @@ class AgendaGUI:
             tk.messagebox.showinfo("Info", "Agenda Saved Successfully")
         self.reset_to_main_menu() 
 
+
     def show_add_contact_form(self):
+        # Clear existing widgets
         self.clear_widgets()
-        self.create_add_contact_form()
+
+        # Create a new window for adding contacts
+        add_window = tk.Toplevel(self.root)
+        add_window.title("Add New Contact")
+        add_window.geometry("500x600")
+
+        # Create a frame for the form
+        form_frame = tk.Frame(add_window)
+        form_frame.pack(fill=tk.BOTH, expand=True, padx=20, pady=20)
+
+        # Field labels and entries
+        fields = [
+            ('First Name', 'first name'), ('Last Name', 'last name'), 
+            ('Phone', 'phone'), ('Email', 'email'), ('Group', 'group'),
+            ('Street', 'street'), ('City', 'city'), ('State', 'state'), ('Note', 'note')
+        ]
+        self.entries = {}
+        self.error_labels = {}
+
+        for i, (label, field) in enumerate(fields):
+            tk.Label(form_frame, text=label).grid(row=i, column=0, sticky='e', pady=5)
+            entry = tk.Entry(form_frame, width=40)
+            entry.grid(row=i, column=1, sticky='w', pady=5)
+            self.entries[field] = entry
+
+            error_label = tk.Label(form_frame, text="", fg="red")
+            error_label.grid(row=i, column=2, sticky='w', pady=5)
+            self.error_labels[field] = error_label
+
+        # Add and Cancel Buttons
+        tk.Button(form_frame, text="Add Contact", command=self.validate_and_add_contact).grid(row=len(fields), column=0, columnspan=2, pady=20)
+        tk.Button(form_frame, text="Cancel", command=add_window.destroy).grid(row=len(fields), column=1, columnspan=2, pady=20)
 
     def create_add_contact_form(self):
         # Clear existing widgets
@@ -143,56 +176,39 @@ class AgendaGUI:
 
     def validate_and_add_contact(self):
         errors = []
+        contact_data = {}
 
-        # Get data from entries
-        first_name = self.entries['First Name'].get().strip()
-        last_name = self.entries['Last Name'].get().strip()
-        phone = self.entries['Phone'].get().strip()
-        email = self.entries['Email'].get().strip()
-        group = self.entries['Group'].get().strip()
-        street = self.entries['Street'].get().strip()
-        city = self.entries['City'].get().strip()
-        state = self.entries['State'].get().strip()
-        note = self.entries['Note'].get().strip()
+        for field, entry in self.entries.items():
+            value = entry.get().strip()
+            contact_data[field] = value
 
-        # Validation
-        if not first_name:
-            errors.append(('First Name', "First name is required"))
-        if not phone:
-            errors.append(('Phone', "Phone number is required"))
-        if len(phone) > self.MAX_LENGTHS['phone']:
-            errors.append(('Phone', f"Phone number cannot exceed {self.MAX_LENGTHS['phone']} characters"))
-        if any(c not in self.VALID_PHONE_CHARS for c in phone):
-            errors.append(('Phone', "Phone number contains invalid characters"))
+            # Basic validation
+            if field in ['first name', 'phone'] and not value:
+                errors.append((field, f"{field.capitalize()} is required"))
+            elif len(value) > self.MAX_LENGTHS.get(field, 100):
+                errors.append((field, f"{field.capitalize()} cannot exceed {self.MAX_LENGTHS.get(field, 100)} characters"))
 
-        if len(first_name) > self.MAX_LENGTHS['first name']:
-            errors.append(('First Name', f"First name cannot exceed {self.MAX_LENGTHS['first name']} characters"))
-        if len(last_name) > self.MAX_LENGTHS['last name']:
-            errors.append(('Last Name', f"Last name cannot exceed {self.MAX_LENGTHS['last name']} characters"))
-        if len(email) > self.MAX_LENGTHS['email']:
-            errors.append(('Email', f"Email cannot exceed {self.MAX_LENGTHS['email']} characters"))
-        if email and '@' not in email:
-            errors.append(('Email', "Email must contain '@'"))
-        if email and not self.validate_email_domain(email):
-            errors.append(('Email', "Email domain is not valid"))
-        if len(group) > self.MAX_LENGTHS['group']:
-            errors.append(('Group', f"Group cannot exceed {self.MAX_LENGTHS['group']} characters"))
-        if len(street) > self.MAX_LENGTHS['street']:
-            errors.append(('Street', f"Street cannot exceed {self.MAX_LENGTHS['street']} characters"))
-        if len(city) > self.MAX_LENGTHS['city']:
-            errors.append(('City', f"City cannot exceed {self.MAX_LENGTHS['city']} characters"))
-        if len(state) > self.MAX_LENGTHS['state']:
-            errors.append(('State', f"State cannot exceed {self.MAX_LENGTHS['state']} characters"))
-        if len(note) > self.MAX_LENGTHS['note']:
-            errors.append(('Note', f"Note cannot exceed {self.MAX_LENGTHS['note']} characters"))
+        # Specific validations
+        if contact_data['phone'] and not all(c in self.VALID_PHONE_CHARS for c in contact_data['phone']):
+            errors.append(('phone', "Phone number contains invalid characters"))
+        
+        if contact_data['email']:
+            if '@' not in contact_data['email']:
+                errors.append(('email', "Email must contain '@'"))
+            elif not self.validate_email_domain(contact_data['email']):
+                errors.append(('email', "Email domain is not valid"))
 
-        # Display errors
+        # Clear previous error messages
+        for error_label in self.error_labels.values():
+            error_label.config(text="")
+
+        # Display new error messages
         for field, error in errors:
             self.error_labels[field].config(text=error)
 
         if not errors:
-            self.add_contact_data(first_name, last_name, phone, email, group, street, city, state, note)
-            tk.messagebox.showinfo("Info", "Contact added successfully")
+            self.add_contact_data(**contact_data)
+            tk.messagebox.showinfo("Success", "Contact added successfully")
             self.reset_to_main_menu()
 
     def validate_email_domain(self, email):
@@ -203,16 +219,14 @@ class AgendaGUI:
         except:
             return False
 
-    def add_contact_data(self, first_name, last_name, phone, email, group, street, city, state, note):
-        self.data['name']['first name'].append(first_name)
-        self.data['name']['last name'].append(last_name)
-        self.data['phone'].append(phone)
-        self.data['email'].append(email)
-        self.data['group'].append(group)
-        self.data['address']['street'].append(street)
-        self.data['address']['city'].append(city)
-        self.data['address']['state'].append(state)
-        self.data['note'].append(note)
+    def add_contact_data(self, **kwargs):
+        for key, value in kwargs.items():
+            if key in ['first name', 'last name']:
+                self.data['name'][key].append(value)
+            elif key in ['street', 'city', 'state']:
+                self.data['address'][key].append(value)
+            else:
+                self.data[key].append(value)
 
     def reset_to_main_menu(self):
         self.clear_widgets()
@@ -222,13 +236,211 @@ class AgendaGUI:
         for widget in self.root.winfo_children():
             widget.destroy()
 
+
+    # Function to display contact details
     def view_contacts(self):
-        tk.messagebox.showinfo("Info", "View Contacts clicked")
-        # TO DO 
+        # Clear existing widgets
+        self.clear_widgets()
+
+        # Create a new window for viewing contacts
+        view_window = tk.Toplevel(self.root)
+        view_window.title("View Contacts")
+        view_window.geometry("600x400")
+
+        # Create a frame for the contact list
+        list_frame = tk.Frame(view_window)
+        list_frame.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
+
+        # Create a scrollbar
+        scrollbar = tk.Scrollbar(list_frame)
+        scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+
+        # Create a listbox for contacts
+        contact_listbox = tk.Listbox(list_frame, yscrollcommand=scrollbar.set)
+        contact_listbox.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+
+        # Configure the scrollbar
+        scrollbar.config(command=contact_listbox.yview)
+
+        # Populate the listbox with contacts
+        names = sorted(zip(self.data['name']['first name'], self.data['name']['last name']), 
+                    key=lambda x: (x[0].lower(), x[1].lower()))
+        for first_name, last_name in names:
+            contact_listbox.insert(tk.END, f"{first_name} {last_name}")
+
+        # Function to display contact details
+        def show_contact_details():
+            selection = contact_listbox.curselection()
+            if selection:
+                index = selection[0]
+                first_name, last_name = names[index]
+                self.view_contact_details(first_name, last_name)
+
+        # Create a button to view contact details
+        view_button = tk.Button(view_window, text="View Details", command=show_contact_details)
+        view_button.pack(pady=10)
+
+        # Create a button to return to the main menu
+        back_button = tk.Button(view_window, text="Back to Main Menu", command=self.reset_to_main_menu)
+        back_button.pack(pady=10)
+
+    def view_contact_details(self, first_name, last_name):
+        # Create a new window for contact details
+        details_window = tk.Toplevel(self.root)
+        details_window.title(f"Contact Details: {first_name} {last_name}")
+        details_window.geometry("400x300")
+
+        # Find the index of the contact
+        index = self.data['name']['first name'].index(first_name)
+
+        # Create labels for each piece of information
+        tk.Label(details_window, text=f"Name: {first_name} {last_name}").pack(anchor='w', padx=10, pady=5)
+        tk.Label(details_window, text=f"Phone: {self.data['phone'][index]}").pack(anchor='w', padx=10, pady=5)
+        tk.Label(details_window, text=f"Email: {self.data['email'][index]}").pack(anchor='w', padx=10, pady=5)
+        tk.Label(details_window, text=f"Group: {self.data['group'][index]}").pack(anchor='w', padx=10, pady=5)
+        tk.Label(details_window, text=f"Address: {self.data['address']['street'][index]}, "
+                                    f"{self.data['address']['city'][index]}, "
+                                    f"{self.data['address']['state'][index]}").pack(anchor='w', padx=10, pady=5)
+        tk.Label(details_window, text=f"Note: {self.data['note'][index]}").pack(anchor='w', padx=10, pady=5)
+
+        # Create a button to close the details window
+        tk.Button(details_window, text="Close", command=details_window.destroy).pack(pady=10)
 
     def edit_contact(self):
-        tk.messagebox.showinfo("Info", "Edit Contact clicked")
-        # TO DO 
+        # Clear existing widgets
+        self.clear_widgets()
+
+        # Create a new window for editing contacts
+        edit_window = tk.Toplevel(self.root)
+        edit_window.title("Edit Contact")
+        edit_window.geometry("600x700")
+
+        # Create a frame for the contact list
+        list_frame = tk.Frame(edit_window)
+        list_frame.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
+
+        # Create a scrollbar
+        scrollbar = tk.Scrollbar(list_frame)
+        scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+
+        # Create a listbox for contacts
+        contact_listbox = tk.Listbox(list_frame, yscrollcommand=scrollbar.set)
+        contact_listbox.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+
+        # Configure the scrollbar
+        scrollbar.config(command=contact_listbox.yview)
+
+        # Populate the listbox with contacts
+        names = sorted(zip(self.data['name']['first name'], self.data['name']['last name']), 
+                    key=lambda x: (x[0].lower(), x[1].lower()))
+        for first_name, last_name in names:
+            contact_listbox.insert(tk.END, f"{first_name} {last_name}")
+
+        # Function to load contact details for editing
+        def load_contact_for_edit():
+            selection = contact_listbox.curselection()
+            if selection:
+                index = selection[0]
+                first_name, last_name = names[index]
+                self.show_edit_form(first_name, last_name)
+
+        # Create a button to load contact for editing
+        edit_button = tk.Button(edit_window, text="Edit Selected Contact", command=load_contact_for_edit)
+        edit_button.pack(pady=10)
+
+        # Create a button to return to the main menu
+        back_button = tk.Button(edit_window, text="Back to Main Menu", command=self.reset_to_main_menu)
+        back_button.pack(pady=10)
+
+    def show_edit_form(self, first_name, last_name):
+        # Create a new window for editing the contact
+        edit_form = tk.Toplevel(self.root)
+        edit_form.title(f"Edit Contact: {first_name} {last_name}")
+        edit_form.geometry("500x600")
+
+        # Create a frame for the form
+        form_frame = tk.Frame(edit_form)
+        form_frame.pack(fill=tk.BOTH, expand=True, padx=20, pady=20)
+
+        # Find the index of the contact
+        index = self.data['name']['first name'].index(first_name)
+
+        # Field labels, entries, and current values
+        fields = [
+            ('First Name', 'first name', self.data['name']['first name'][index]),
+            ('Last Name', 'last name', self.data['name']['last name'][index]),
+            ('Phone', 'phone', self.data['phone'][index]),
+            ('Email', 'email', self.data['email'][index]),
+            ('Group', 'group', self.data['group'][index]),
+            ('Street', 'street', self.data['address']['street'][index]),
+            ('City', 'city', self.data['address']['city'][index]),
+            ('State', 'state', self.data['address']['state'][index]),
+            ('Note', 'note', self.data['note'][index])
+        ]
+
+        self.entries = {}
+        self.error_labels = {}
+
+        for i, (label, field, current_value) in enumerate(fields):
+            tk.Label(form_frame, text=label).grid(row=i, column=0, sticky='e', pady=5)
+            entry = tk.Entry(form_frame, width=40)
+            entry.insert(0, current_value)
+            entry.grid(row=i, column=1, sticky='w', pady=5)
+            self.entries[field] = entry
+
+            error_label = tk.Label(form_frame, text="", fg="red")
+            error_label.grid(row=i, column=2, sticky='w', pady=5)
+            self.error_labels[field] = error_label
+
+        # Update and Cancel Buttons
+        tk.Button(form_frame, text="Update Contact", command=lambda: self.validate_and_update_contact(index)).grid(row=len(fields), column=0, columnspan=2, pady=20)
+        tk.Button(form_frame, text="Cancel", command=edit_form.destroy).grid(row=len(fields), column=1, columnspan=2, pady=20)
+
+    def validate_and_update_contact(self, index):
+        errors = []
+        updated_data = {}
+
+        for field, entry in self.entries.items():
+            value = entry.get().strip()
+            updated_data[field] = value
+
+            # Basic validation
+            if field in ['first name', 'phone'] and not value:
+                errors.append((field, f"{field.capitalize()} is required"))
+            elif len(value) > self.MAX_LENGTHS.get(field, 100):
+                errors.append((field, f"{field.capitalize()} cannot exceed {self.MAX_LENGTHS.get(field, 100)} characters"))
+
+        # Specific validations
+        if updated_data['phone'] and not all(c in self.VALID_PHONE_CHARS for c in updated_data['phone']):
+            errors.append(('phone', "Phone number contains invalid characters"))
+        
+        if updated_data['email']:
+            if '@' not in updated_data['email']:
+                errors.append(('email', "Email must contain '@'"))
+            elif not self.validate_email_domain(updated_data['email']):
+                errors.append(('email', "Email domain is not valid"))
+
+        # Clear previous error messages
+        for error_label in self.error_labels.values():
+            error_label.config(text="")
+
+        # Display new error messages
+        for field, error in errors:
+            self.error_labels[field].config(text=error)
+
+        if not errors:
+            self.update_contact_data(index, **updated_data)
+            tk.messagebox.showinfo("Success", "Contact updated successfully")
+            self.reset_to_main_menu()
+
+    def update_contact_data(self, index, **kwargs):
+        for key, value in kwargs.items():
+            if key in ['first name', 'last name']:
+                self.data['name'][key][index] = value
+            elif key in ['street', 'city', 'state']:
+                self.data['address'][key][index] = value
+            else:
+                self.data[key][index] = value
 
     def delete_contact(self):
         tk.messagebox.showinfo("Info", "Delete Contact clicked")
