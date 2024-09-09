@@ -149,7 +149,7 @@ What I used:
 In order to run the application, you need to execute the script to launch the agenda GUI:
 
     ```bash
-    python your_script_name.py
+    python agenda_gui.py
     ```
 
 The GUI will open, providing a menu with options to add, view, edit, delete, and search for contacts. You can also save and load the agenda from a JSON file.
