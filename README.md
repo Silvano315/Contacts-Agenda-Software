@@ -137,9 +137,25 @@ In the folder Logs, you can find the [log file](Logs/agenda_operations.log), whe
 2024-07-26 09-58-03 - INFO - Loaded contacts from file: Contacts/agenda.json
 ```
 
-## Extra: GUI
+## Extra: GUI with Tkinter
 
-**TBD**
+This project is a graphical user interface (GUI) application built with Python's Tkinter library, designed to manage a simple phone agenda. It allows users to perform basic CRUD (Create, Read, Update, Delete) operations on contacts and save/load the agenda data to/from a JSON file.
+
+What I used:
+- **Tkinter**: The standard GUI toolkit for Python, used to create the application's windows, buttons, forms, and other interface elements.
+- **JSON**: For saving and loading contact data in a structured format.
+- **tld**: A library used for email validation by checking the validity of domain names.
+
+In order to run the application, you need to execute the script to launch the agenda GUI:
+
+    ```bash
+    python your_script_name.py
+    ```
+
+The GUI will open, providing a menu with options to add, view, edit, delete, and search for contacts. You can also save and load the agenda from a JSON file.
+
+Feel free to use this application to manage your contacts efficiently. The interface is intuitive, and the functionalities are designed to be user-friendly, so you can focus more on managing your contacts rather than understanding the code. If you have any suggestions or improvements, contributions are welcome!
+
 
 ## Requirements
 
