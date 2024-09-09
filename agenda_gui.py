@@ -7,6 +7,8 @@ from tld import get_tld
 # Suppress Tkinter deprecation warnings
 os.environ['TK_SILENCE_DEPRECATION'] = '1'
 
+
+# Main Class for Agenda GUI
 class AgendaGUI:
     MAX_LENGTHS = {
         'first name': 30,
@@ -25,7 +27,7 @@ class AgendaGUI:
     def __init__(self, root):
         self.root = root
         self.root.title("Phone Agenda")
-        self.root.geometry("500x500")  # Increased size for better layout
+        self.root.geometry("500x500") 
 
         # Path to file JSON
         self.file_path = "Contacts/agenda_gui.json"
@@ -76,6 +78,9 @@ class AgendaGUI:
         tk.Button(self.root, text="Edit Contact", width=20, command=self.edit_contact).pack(pady=10)
         tk.Button(self.root, text="Delete Contact", width=20, command=self.delete_contact).pack(pady=10)
         tk.Button(self.root, text="Search Contact", width=20, command=self.search_contact).pack(pady=10)
+
+        # Add Exit Button
+        tk.Button(self.root, text="Exit", width=20, command=self.root.quit).pack(pady=10)
 
     def initialize_agenda(self):
         self.data = {
@@ -142,12 +147,10 @@ class AgendaGUI:
         tk.Button(form_frame, text="Cancel", command=add_window.destroy).grid(row=len(fields), column=1, columnspan=2, pady=20)
 
     def create_add_contact_form(self):
-        # Clear existing widgets
         self.clear_widgets()
 
         tk.Label(self.root, text="Add Contact", font=('Arial', 14)).grid(row=0, column=0, columnspan=2, pady=10)
 
-        # Field labels, entries, and error messages
         fields = ['First Name', 'Last Name', 'Phone', 'Email', 'Group', 'Street', 'City', 'State', 'Note']
         self.entries = {}
         self.error_labels = {}
@@ -162,7 +165,7 @@ class AgendaGUI:
             self.entries[field] = entry
 
             # Error label for the field
-            error_label = tk.Label(self.root, text="", fg="red", wraplength=400)  # Wrap text to fit within the window
+            error_label = tk.Label(self.root, text="", fg="red", wraplength=400) 
             error_label.grid(row=i * 2 + 2, column=1, pady=5, padx=10, sticky='w')
             self.error_labels[field] = error_label
 
@@ -182,13 +185,11 @@ class AgendaGUI:
             value = entry.get().strip()
             contact_data[field] = value
 
-            # Basic validation
             if field in ['first name', 'phone'] and not value:
                 errors.append((field, f"{field.capitalize()} is required"))
             elif len(value) > self.MAX_LENGTHS.get(field, 100):
                 errors.append((field, f"{field.capitalize()} cannot exceed {self.MAX_LENGTHS.get(field, 100)} characters"))
 
-        # Specific validations
         if contact_data['phone'] and not all(c in self.VALID_PHONE_CHARS for c in contact_data['phone']):
             errors.append(('phone', "Phone number contains invalid characters"))
         
@@ -239,7 +240,6 @@ class AgendaGUI:
 
     # Function to display contact details
     def view_contacts(self):
-        # Clear existing widgets
         self.clear_widgets()
 
         # Create a new window for viewing contacts
@@ -306,8 +306,8 @@ class AgendaGUI:
         # Create a button to close the details window
         tk.Button(details_window, text="Close", command=details_window.destroy).pack(pady=10)
 
+    # Function to edit a contact in the list
     def edit_contact(self):
-        # Clear existing widgets
         self.clear_widgets()
 
         # Create a new window for editing contacts
@@ -396,6 +396,7 @@ class AgendaGUI:
         tk.Button(form_frame, text="Update Contact", command=lambda: self.validate_and_update_contact(index)).grid(row=len(fields), column=0, columnspan=2, pady=20)
         tk.Button(form_frame, text="Cancel", command=edit_form.destroy).grid(row=len(fields), column=1, columnspan=2, pady=20)
 
+
     def validate_and_update_contact(self, index):
         errors = []
         updated_data = {}
@@ -404,13 +405,11 @@ class AgendaGUI:
             value = entry.get().strip()
             updated_data[field] = value
 
-            # Basic validation
             if field in ['first name', 'phone'] and not value:
                 errors.append((field, f"{field.capitalize()} is required"))
             elif len(value) > self.MAX_LENGTHS.get(field, 100):
                 errors.append((field, f"{field.capitalize()} cannot exceed {self.MAX_LENGTHS.get(field, 100)} characters"))
 
-        # Specific validations
         if updated_data['phone'] and not all(c in self.VALID_PHONE_CHARS for c in updated_data['phone']):
             errors.append(('phone', "Phone number contains invalid characters"))
         
@@ -442,8 +441,8 @@ class AgendaGUI:
             else:
                 self.data[key][index] = value
 
+    # Function to delete a contact
     def delete_contact(self):
-        # Clear existing widgets
         self.clear_widgets()
 
         # Create a new window for deleting contacts
@@ -471,7 +470,7 @@ class AgendaGUI:
         for first_name, last_name in contacts:
             contact_listbox.insert(tk.END, f"{first_name} {last_name}")
 
-        # Function to delete the selected contact
+        # Function to confirm the deletion the selected contact
         def confirm_delete():
             selection = contact_listbox.curselection()
             if selection:
@@ -505,8 +504,8 @@ class AgendaGUI:
         self.data['address']['state'].pop(index)
         self.data['note'].pop(index)
 
+    # Function to search and find a contact in the agenda
     def search_contact(self):
-        # Clear existing widgets
         self.clear_widgets()
 
         # Create a new window for searching contacts
@@ -606,7 +605,8 @@ class AgendaGUI:
                 results.append(contact_info)
 
         return results
-        
+
+# Main Agenda
 if __name__ == "__main__":
     root = tk.Tk()
     app = AgendaGUI(root)
