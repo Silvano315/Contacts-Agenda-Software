@@ -443,13 +443,169 @@ class AgendaGUI:
                 self.data[key][index] = value
 
     def delete_contact(self):
-        tk.messagebox.showinfo("Info", "Delete Contact clicked")
-        # TO DO 
+        # Clear existing widgets
+        self.clear_widgets()
+
+        # Create a new window for deleting contacts
+        delete_window = tk.Toplevel(self.root)
+        delete_window.title("Delete Contact")
+        delete_window.geometry("500x400")
+
+        # Create a frame for the contact list
+        list_frame = tk.Frame(delete_window)
+        list_frame.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
+
+        # Create a scrollbar
+        scrollbar = tk.Scrollbar(list_frame)
+        scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+
+        # Create a listbox for contacts
+        contact_listbox = tk.Listbox(list_frame, yscrollcommand=scrollbar.set)
+        contact_listbox.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+
+        # Configure the scrollbar
+        scrollbar.config(command=contact_listbox.yview)
+
+        # Populate the listbox with contacts
+        contacts = list(zip(self.data['name']['first name'], self.data['name']['last name']))
+        for first_name, last_name in contacts:
+            contact_listbox.insert(tk.END, f"{first_name} {last_name}")
+
+        # Function to delete the selected contact
+        def confirm_delete():
+            selection = contact_listbox.curselection()
+            if selection:
+                index = selection[0]
+                contact = contacts[index]
+                response = tk.messagebox.askyesno("Confirm Deletion", f"Are you sure you want to delete {contact[0]} {contact[1]}?")
+                if response:
+                    self.delete_contact_data(index)
+                    contact_listbox.delete(index)
+                    tk.messagebox.showinfo("Success", "Contact deleted successfully")
+            else:
+                tk.messagebox.showwarning("Warning", "Please select a contact to delete")
+
+        # Create a button to delete the selected contact
+        delete_button = tk.Button(delete_window, text="Delete Selected Contact", command=confirm_delete)
+        delete_button.pack(pady=10)
+
+        # Create a button to return to the main menu
+        back_button = tk.Button(delete_window, text="Back to Main Menu", command=self.reset_to_main_menu)
+        back_button.pack(pady=10)
+
+    def delete_contact_data(self, index):
+        # Remove the contact data from all relevant lists
+        self.data['name']['first name'].pop(index)
+        self.data['name']['last name'].pop(index)
+        self.data['phone'].pop(index)
+        self.data['email'].pop(index)
+        self.data['group'].pop(index)
+        self.data['address']['street'].pop(index)
+        self.data['address']['city'].pop(index)
+        self.data['address']['state'].pop(index)
+        self.data['note'].pop(index)
 
     def search_contact(self):
-        tk.messagebox.showinfo("Info", "Search Contact clicked")
-        # TO DO 
+        # Clear existing widgets
+        self.clear_widgets()
 
+        # Create a new window for searching contacts
+        search_window = tk.Toplevel(self.root)
+        search_window.title("Search Contacts")
+        search_window.geometry("600x500")
+
+        # Create a frame for the search form
+        search_frame = tk.Frame(search_window)
+        search_frame.pack(fill=tk.BOTH, expand=True, padx=20, pady=20)
+
+        # Search entry
+        tk.Label(search_frame, text="Search term:").grid(row=0, column=0, sticky='e', pady=5)
+        search_entry = tk.Entry(search_frame, width=40)
+        search_entry.grid(row=0, column=1, sticky='w', pady=5)
+
+        # Search fields checkboxes
+        tk.Label(search_frame, text="Search in:").grid(row=1, column=0, sticky='e', pady=5)
+        fields_frame = tk.Frame(search_frame)
+        fields_frame.grid(row=1, column=1, sticky='w', pady=5)
+
+        search_fields = ['Name', 'Phone', 'Email', 'Group', 'Address', 'Note']
+        field_vars = {field: tk.BooleanVar(value=True) for field in search_fields}
+
+        for i, field in enumerate(search_fields):
+            tk.Checkbutton(fields_frame, text=field, variable=field_vars[field]).grid(row=i//3, column=i%3, sticky='w')
+
+        # Results listbox
+        tk.Label(search_frame, text="Results:").grid(row=2, column=0, sticky='ne', pady=5)
+        results_frame = tk.Frame(search_frame)
+        results_frame.grid(row=2, column=1, sticky='w', pady=5)
+
+        scrollbar = tk.Scrollbar(results_frame)
+        scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+
+        results_listbox = tk.Listbox(results_frame, yscrollcommand=scrollbar.set, width=50, height=10)
+        results_listbox.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+
+        scrollbar.config(command=results_listbox.yview)
+
+        # Variable to store search results
+        search_results = []
+
+        # Search button
+        def perform_search():
+            nonlocal search_results
+            search_term = search_entry.get().lower()
+            selected_fields = [field for field, var in field_vars.items() if var.get()]
+            search_results = self.search_contacts(search_term, selected_fields)
+            
+            results_listbox.delete(0, tk.END)
+            for result in search_results:
+                results_listbox.insert(tk.END, f"{result['first_name']} {result['last_name']} - {result['phone']}")
+
+        tk.Button(search_frame, text="Search", command=perform_search).grid(row=3, column=0, columnspan=2, pady=10)
+
+        # View contact details
+        def view_contact_details():
+            selection = results_listbox.curselection()
+            if selection:
+                index = selection[0]
+                result = search_results[index]
+                self.view_contact_details(result['first_name'], result['last_name'])
+
+        tk.Button(search_frame, text="View Details", command=view_contact_details).grid(row=4, column=0, columnspan=2, pady=10)
+
+        # Back to main menu button
+        tk.Button(search_frame, text="Back to Main Menu", command=self.reset_to_main_menu).grid(row=5, column=0, columnspan=2, pady=10)
+
+    def search_contacts(self, search_term, fields):
+        results = []
+        for i in range(len(self.data['name']['first name'])):
+            match = False
+            contact_info = {
+                'first_name': self.data['name']['first name'][i],
+                'last_name': self.data['name']['last name'][i],
+                'phone': self.data['phone'][i],
+                'email': self.data['email'][i],
+                'group': self.data['group'][i],
+                'address': f"{self.data['address']['street'][i]}, {self.data['address']['city'][i]}, {self.data['address']['state'][i]}",
+                'note': self.data['note'][i]
+            }
+
+            for field in fields:
+                field_value = field.lower()
+                if field_value == 'name':
+                    if (search_term in contact_info['first_name'].lower() or 
+                        search_term in contact_info['last_name'].lower()):
+                        match = True
+                        break
+                elif field_value in contact_info:
+                    if search_term in contact_info[field_value].lower():
+                        match = True
+                        break
+
+            if match:
+                results.append(contact_info)
+
+        return results
         
 if __name__ == "__main__":
     root = tk.Tk()
